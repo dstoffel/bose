@@ -16,6 +16,11 @@ rules = [
 	Rule(id='action',pattern='stop la musique', out='dans quel pièce?', childs=[
 			Rule(id='where', pattern='salon', out='salon'),
 			Rule(id='where', pattern='bureau', out='bureau'),
+	]),
+	Rule(id='action',pattern='mets? le volume', out='a combien de pourcentage?', childs=[
+		Rule(id='vol', pattern='\d+', out='dans quelle pièce?', childs=[
+			Rule(id='where', pattern='salon', out='salon'),
+		])
 	])
 ]
 
@@ -35,6 +40,8 @@ class bose(automation):
 		elif data['action'] == 'stop la musique':
 			self.debug('stoping musique %s' % data['where'])
 			bosel.sendkey(data['where'], 'PAUSE')
+		elif 'volume' in data['action']:
+			bosel.volume(data['where'], volume=data['vol']) 
 		else:
 			pass
 		return "c'est fait"
